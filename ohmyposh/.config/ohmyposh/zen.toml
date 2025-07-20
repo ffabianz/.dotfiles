@@ -1,0 +1,123 @@
+console_title_template = '{{ .Shell }} in {{ .Folder }}'
+version = 4
+final_space = true
+
+[palette]
+  black = '#313244'
+  blue = '#74c7ec'
+  green = '#a6e3a1'
+  mauve = '#bd93f9'
+  pink = '#ff79c6'
+  red = '#f38ba8'
+  white = '#E0DEF4'
+  yellow = '#f9e2af'
+
+[secondary_prompt]
+  template = '❯❯ '
+  foreground = 'p:green'
+  background = 'transparent'
+
+[transient_prompt]
+  template = '❯ '
+  background = 'transparent'
+  foreground_templates = ['{{if gt .Code 0}}red{{end}}', '{{if eq .Code 0}}green{{end}}']
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    template = '{{.Icon}} '
+    foreground = 'p:black'
+    powerline_symbol = ''
+    background = 'p:white'
+    type = 'os'
+    style = 'powerline'
+    leading_powerline_symbol = ''
+
+  [[blocks.segments]]
+    template = '{{ if .SSHSession }} {{ end }}'
+    foreground = 'p:black'
+    powerline_symbol = ''
+    background = 'p:mauve'
+    type = 'session'
+    style = 'powerline'
+
+  [[blocks.segments]]
+    template = '  {{ .Path }} '
+    foreground = '#181825'
+    powerline_symbol = ''
+    background = 'p:mauve'
+    type = 'path'
+    style = 'powerline'
+
+    [blocks.segments.options]
+      style = 'mixed'
+
+  [[blocks.segments]]
+    trailing_diamond = ''
+    foreground = 'p:black'
+    background = 'p:green'
+    type = 'git'
+    style = 'diamond'
+    background_templates = ['{{ if or (.Working.Changed) (.Staging.Changed) }}p:yellow{{ end }}', '{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:red{{ end }}', '{{ if gt .Ahead 0 }}p:green{{ end }}', '{{ if gt .Behind 0 }}p:pink{{ end }}']
+    templates = [' {{ if .UpstreamURL }}{{ url .UpstreamIcon .UpstreamURL }} {{ end }}', '{{ .HEAD }} ', '{{ if gt .Behind 0 }} ⇣{{ .Behind }}{{ end }}', '{{ if gt .Ahead 0 }} ⇡{{ .Ahead }}{{ end }}', '{{if gt .StashCount 0}} *{{.StashCount}}{{end}}', '{{ if .Staging.Changed }} {{ .Staging.String }}{{ end }}', '{{ if .Working.Changed }} {{ .Working.String }}{{ end }}  ']
+
+    [blocks.segments.options]
+      branch_template = '{{ trunc 25 .Branch }}'
+      fetch_status = true
+      fetch_upstream_icon = true
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    template = '❯'
+    background = 'transparent'
+    type = 'text'
+    style = 'plain'
+    foreground_templates = ['{{if gt .Code 0}}red{{end}}', '{{if eq .Code 0}}green{{end}}']
+
+[[blocks]]
+  type = 'rprompt'
+
+  [[blocks.segments]]
+    template = ' '
+    foreground = 'p:green'
+    background = 'transparent'
+    type = 'node'
+    style = 'plain'
+
+    [blocks.segments.options]
+      display_mode = 'files'
+      fetch_version = true
+
+  [[blocks.segments]]
+    template = ' '
+    foreground = 'p:yellow'
+    background = 'transparent'
+    type = 'python'
+    style = 'plain'
+
+    [blocks.segments.options]
+      display_mode = 'files'
+      fetch_version = true
+
+  [[blocks.segments]]
+    template = ' '
+    foreground = 'p:blue'
+    background = 'transparent'
+    type = 'lua'
+    style = 'plain'
+
+    [blocks.segments.options]
+      display_mode = 'files'
+      fetch_version = true
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true

@@ -1,0 +1,13 @@
+# theme = Catppuccin Mocha
+#theme = Dracula
+theme = Rose Pine
+
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+shell-integration-features = ssh-env
+window-height=35
+window-width=120
+# background-opacity=0.93
+
+background-opacity=1
+

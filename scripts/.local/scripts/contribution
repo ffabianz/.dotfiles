@@ -1,0 +1,52 @@
+#!/bin/zsh
+folder="${1:-.}"
+
+typeset -A author_lines
+typeset -A original_names
+
+for file in ${(f)"$(git ls-files $folder)"}; do
+  git blame "$file" --porcelain | awk '
+  /^author / {
+      author=$2
+      for(i=3;i<NF;i++) author=author" "$i
+  } 
+  /^author-mail/{next} 
+  /^author-time/{next} 
+  /^author-tz/{next}
+  /^filename/{next} 
+  /^summary/{next}
+  /^boundary/{next}
+  /^committer/{next}
+  /^[0-9a-f]{40}/ {
+      lines[author]++
+  } 
+  END {
+      for (a in lines) {
+          sanitized = a
+          # Replace common accented characters with unaccented equivalents
+          gsub(/[áàâãäåāăą]/, "a", sanitized)
+          gsub(/[éèêëēĕę]/, "e", sanitized)
+          gsub(/[íìîïīĭį]/, "i", sanitized)
+          gsub(/[óòôõöōŏő]/, "o", sanitized)
+          gsub(/[úùûüūŭůűų]/, "u", sanitized)
+          gsub(/[ñńň]/, "n", sanitized)
+          gsub(/[^a-zA-Z0-9 ]/, "_", sanitized)
+          gsub(/ /, "_", sanitized)
+          # Escape quotes in original name to make it safe for eval
+          orig_escaped = a
+          gsub(/"/, "\\\"", orig_escaped)
+          # Use a delimiter to handle spaces and special characters in original name
+          print sanitized "|" orig_escaped "|" lines[a]
+      }
+  }' | while IFS='|' read -r sanitized original count; do
+    # Debug: Print the parsed values
+    # echo "DEBUG: sanitized=[$sanitized], original=[$original], count=[$count]" >&2
+    [[ -z "$sanitized" ]] && continue
+    (( author_lines[$sanitized]+=count ))
+    eval "original_names[$sanitized]=\"$original\""
+  done
+done
+
+for author in ${(k)author_lines}; do
+  echo "${original_names[$author]}: ${author_lines[$author]} lines"
+done
