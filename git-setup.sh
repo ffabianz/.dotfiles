@@ -7,9 +7,13 @@ fi
 
 git config --global core.editor nvim
 git config --global push.autoSetupRemote true
+git config --global push.followTags true
 git config --global gpg.format ssh
 git config --global commit.gpgsign true
 git config --global core.pager cat 
+git config --global column.ui auto
+git config --global branch.sort -committerdate
+git config --global tag.sort version:refname
 
 if ! command -v ssh-keygen; then
 	echo "Install openssh"

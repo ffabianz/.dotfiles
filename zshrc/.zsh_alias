@@ -1,0 +1,36 @@
+alias vim="nvim"
+VIM="nvim"
+alias clip="wl-copy"
+alias upd="sudo pacman -Syu --noconfirm ; yay -Syyu ; flatpak update -y"
+alias glo="git log --oneline"
+alias sla="git shortlog -s -n --all --no-merges"
+alias oops="git reset --soft HEAD~1"
+
+bindkey -s ^f 'tmux-sessionizer\n'
+bindkey -s '\eh' "tmux-sessionizer -s 0\n"
+bindkey -s '\et' "tmux-sessionizer -s 1\n"
+bindkey -s '\en' "tmux-sessionizer -s 2\n"
+bindkey -s '\es' "tmux-sessionizer -s 3\n"
+
+## remove orphans packages
+rop() {
+    orphans=$(pacman -Qdtq)
+    if [[ -n "$orphans" ]]; then
+        echo "Orphaned packages detected:"
+        echo "$orphans"
+        
+        sudo pacman -Rns $(echo "$orphans")
+    else
+        echo "No orphan packages to remove!"
+    fi
+}
+##
+
+## find file
+fdd() {
+  file=$(fzf --preview "bat {}")
+  if [[ -n "$file" ]]; then
+    vim "$file"
+  fi
+}
+##
